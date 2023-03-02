@@ -1,9 +1,10 @@
 import { createSchema } from "graphql-yoga";
+import prisma from "@/lib/prisma";
 
 const schema = createSchema({
   typeDefs: `
   type Query {
-    user(id: ID!): User
+    movies: [Movie]
   }
   
   type User {
@@ -19,7 +20,9 @@ const schema = createSchema({
   `,
   resolvers: {
     Query: {
-      user: () => "Eyyy",
+      movies: () => {
+        return prisma.movie.findMany();
+      },
     },
   },
 });
