@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.9",
     "@pothos/core": "^3.27.1",
     "@pothos/plugin-prisma": "^3.41.3",
     "@prisma/client": "^4.11.0",
