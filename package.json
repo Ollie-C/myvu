@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@pothos/core": "^3.27.1",
+    "@pothos/plugin-prisma": "^3.41.3",
     "@prisma/client": "^4.11.0",
     "@types/node": "^18.14.2",
     "@types/react": "18.0.28",
