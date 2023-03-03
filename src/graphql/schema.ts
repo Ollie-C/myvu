@@ -1,5 +1,5 @@
 import { builder } from "./pothos";
-import "./types/Movie";
+import "./types/MyMovie";
 import "./types/User";
 
 export const schema = builder.toSchema();

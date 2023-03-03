@@ -1,19 +1,45 @@
 import { NextPage } from "next";
 import Head from "next/head";
 import { gql, useQuery } from "@apollo/client";
-import type { Movie } from "@prisma/client";
-
-const getMoviesQuery = gql`
+import type { MyMovie } from "@prisma/client";
+import { useEffect, useState } from "react";
+import axios from "axios";
+const getUsersQuery = gql`
   query {
-    movies {
+    getUser {
       id
-      name
+      email
+      role
+      myMovies {
+        title
+      }
     }
   }
 `;
 
 const Home: NextPage = () => {
-  const { data, loading, error } = useQuery(getMoviesQuery);
+  const { data, loading, error } = useQuery(getUsersQuery);
+  const [movies, setMovies] = useState([]);
+  const [searchedMovie, setSearchedMovie] = useState(null);
+
+  const getMovies = async (query: String) => {
+    const { data } = await axios.get(
+      `https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMDB_API_KEY}&query=${query}`
+    );
+    setMovies(data.results.slice(0, 8));
+  };
+
+  const handleSumbit = (e: any) => {
+    e.preventDefault();
+    const movie = e.target.title.value;
+    if (String(movie)) setSearchedMovie(movie);
+  };
+
+  useEffect(() => {
+    if (searchedMovie) {
+      getMovies(searchedMovie);
+    }
+  }, [searchedMovie]);
 
   if (loading) return <p>Loading ...</p>;
   if (error) return <p>{error.message}</p>;
@@ -24,11 +50,36 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="main">
-        <h2>welcome to myvu</h2>
-        <h3>Your movies:</h3>
-        {data.movies.map((movie: Movie) => (
-          <p key={movie.id}>{movie.name}</p>
-        ))}
+        <>
+          <h2>welcome to myvu</h2>
+          <p>email: {data.getUser[0].email}</p>
+          <p>account type: {data.getUser[0].role}</p>
+          <h3>Your movies:</h3>
+          {data.getUser[0].myMovies.map((movie: MyMovie) => (
+            <p key={movie.id}>{movie.title}</p>
+          ))}
+        </>
+        <>
+          <form onSubmit={(e) => handleSumbit(e)}>
+            <h3>Search for a movie:</h3>
+            <input type="text" name="title" id="title" />
+            <button type="submit">Submit</button>
+          </form>
+          <div className="results">
+            <p>Results:</p>
+            {movies &&
+              movies.map((movie) => (
+                <>
+                  <h3>{movie.title}</h3>
+                  <p>Date: {movie.release_date}</p>
+                  <p>Score: {movie.vote_average}</p>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                  ></img>
+                </>
+              ))}
+          </div>
+        </>
       </main>
     </>
   );

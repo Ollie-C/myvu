@@ -1,22 +1,22 @@
-export const movies = [
+export const myMovies = [
   {
     id: 1,
-    name: "The Hunt",
+    title: "The Hunt",
   },
   {
     id: 2,
-    name: "Spirited Away",
+    title: "Spirited Away",
   },
   {
     id: 3,
-    name: "Hero",
+    title: "Hero",
   },
   {
     id: 4,
-    name: "The Matrix",
+    title: "The Matrix",
   },
   {
     id: 5,
-    name: "Sound of Silence",
+    title: "Sound of Silence",
   },
 ];

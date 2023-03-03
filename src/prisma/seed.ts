@@ -1,22 +1,20 @@
-// prisma/seed.ts
-
 import { PrismaClient } from "@prisma/client";
-import { movies } from "../data/movies";
+import { myMovies } from "../data/movies";
 const prisma = new PrismaClient();
 
 async function main() {
   await prisma.user.upsert({
-    where: { email: "testt3st@gmail.com" },
+    where: { email: "bobbobbbbbb@bob.com" },
     update: {},
     create: {
       name: "Ollie",
       role: "ADMIN",
-      email: "testt3st@gmail.com",
+      email: "bobbobbbbbb@bob.com",
     },
   });
 
-  await prisma.movie.createMany({
-    data: movies,
+  await prisma.myMovie.createMany({
+    data: myMovies,
   });
 }
 
