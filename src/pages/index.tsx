@@ -5,24 +5,25 @@ import type { MyMovie } from "@prisma/client";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useUser } from "@auth0/nextjs-auth0/client";
-const getUsersQuery = gql`
-  query {
-    getUser {
-      id
-      email
-      role
-      myMovies {
-        title
-      }
-    }
-  }
-`;
+
+// const getUsersQuery = gql`
+//   query {
+//     getUser {
+//       id
+//       email
+//       role
+//       myMovies {
+//         title
+//       }
+//     }
+//   }
+// `;
 
 const Home: NextPage = () => {
   //Auth0 hook to check if user authenticated
   const { user } = useUser();
 
-  //Apollo hook to get user data (temporary)
+  // //Apollo hook to get user data (temporary)
   // const { data, loading, error } = useQuery(getUsersQuery);
 
   //Movies state and searched movie state
@@ -50,7 +51,11 @@ const Home: NextPage = () => {
     }
   }, [searchedMovie]);
 
-  // if (loading) return <p>Loading ...</p>;
+  // useEffect(() => {
+  //   console.log(data);
+  // }, [data]);
+
+  // // if (loading) return <p>Loading ...</p>;
   // if (error) return <p>{error.message}</p>;
   return (
     <>
@@ -85,15 +90,15 @@ const Home: NextPage = () => {
           <div className="results">
             <p>Results:</p>
             {movies &&
-              movies.map((movie) => (
-                <>
+              movies.map((movie: any) => (
+                <div key={movie.id}>
                   <h3>{movie.title}</h3>
                   <p>Date: {movie.release_date}</p>
                   <p>Score: {movie.vote_average}</p>
                   <img
                     src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                   ></img>
-                </>
+                </div>
               ))}
           </div>
         </>

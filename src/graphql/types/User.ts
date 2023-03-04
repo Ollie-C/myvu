@@ -3,6 +3,7 @@ import { builder } from "../pothos";
 builder.prismaObject("User", {
   fields: (t) => ({
     id: t.exposeID("id"),
+    name: t.exposeString("name", { nullable: true }),
     email: t.exposeString("email", { nullable: true }),
     role: t.expose("role", { type: Role }),
     myMovies: t.relation("myMovies"),
