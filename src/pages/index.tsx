@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useMutation } from "@apollo/client";
 import type { MyMovie } from "@prisma/client";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -19,6 +19,22 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 //   }
 // `;
 
+const AddMyMovieMutation = gql`
+  mutation addMyMovie(
+    $title: String!
+    $image: String!
+    $date: String!
+    $tmdbID: Int!
+  ) {
+    addMyMovie(title: $title, image: $image, date: $date, tmdbID: $tmdbID) {
+      title
+      image
+      date
+      tmdbID
+    }
+  }
+`;
+
 const Home: NextPage = () => {
   //Auth0 hook to check if user authenticated
   const { user } = useUser();
@@ -29,6 +45,9 @@ const Home: NextPage = () => {
   //Movies state and searched movie state
   const [movies, setMovies] = useState([]);
   const [searchedMovie, setSearchedMovie] = useState(null);
+
+  const [addMyMovie, { loading, error }] = useMutation(AddMyMovieMutation);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   //Async call to get movies data from TMDB (temporary - replace with gql)
   const getMovies = async (query: String) => {
@@ -45,11 +64,34 @@ const Home: NextPage = () => {
     if (String(movie)) setSearchedMovie(movie);
   };
 
+  const addMovie = async (selectedMovie: any) => {
+    const {
+      title,
+      poster_path,
+      release_date: date,
+      id: tmdbID,
+    } = selectedMovie;
+
+    const image = `https://image.tmdb.org/t/p/w200${poster_path}`;
+    const variables = { title, image, date, tmdbID };
+    // await addMyMovie({ variables });
+    try {
+      addMyMovie({ variables });
+    } catch (e) {
+      console.log(e);
+    }
+    console.log(variables);
+  };
+
   useEffect(() => {
     if (searchedMovie) {
       getMovies(searchedMovie);
     }
   }, [searchedMovie]);
+
+  useEffect(() => {
+    console.log(selectedMovie);
+  }, [selectedMovie]);
 
   // useEffect(() => {
   //   console.log(data);
@@ -70,12 +112,6 @@ const Home: NextPage = () => {
             <>
               <p>Logged in!</p>
               <a href="/api/auth/logout">Logout</a>
-              {/* <p>email: {data.getUser[0].email}</p>
-              <p>account type: {data.getUser[0].role}</p>
-              <h3>Your movies:</h3>
-              {data.getUser[0].myMovies.map((movie: MyMovie) => (
-                <p key={movie.id}>{movie.title}</p>
-              ))} */}
             </>
           ) : (
             <a href="/api/auth/login">Login</a>
@@ -89,9 +125,21 @@ const Home: NextPage = () => {
           </form>
           <div className="results">
             <p>Results:</p>
+            {selectedMovie && (
+              <button onClick={() => addMovie(selectedMovie)}>
+                Add Selected
+              </button>
+            )}
             {movies &&
               movies.map((movie: any) => (
-                <div key={movie.id}>
+                <div
+                  key={movie.id}
+                  onClick={() =>
+                    !selectedMovie
+                      ? setSelectedMovie(movie)
+                      : setSelectedMovie(null)
+                  }
+                >
                   <h3>{movie.title}</h3>
                   <p>Date: {movie.release_date}</p>
                   <p>Score: {movie.vote_average}</p>
