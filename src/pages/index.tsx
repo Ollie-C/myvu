@@ -74,7 +74,7 @@ const Home: NextPage = () => {
 
     const image = `https://image.tmdb.org/t/p/w200${poster_path}`;
     const variables = { title, image, date, tmdbID };
-    // await addMyMovie({ variables });
+
     try {
       addMyMovie({ variables });
     } catch (e) {

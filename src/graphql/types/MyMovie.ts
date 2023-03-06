@@ -26,14 +26,12 @@ builder.mutationField("addMyMovie", (t) =>
       const { title, image, date, tmdbID } = args;
 
       //Check if user is logged in
-      // if (!(await ctx).user) {
-      //   throw new Error("You have to be logged in.");
-      // }
-
+      if (!(await ctx).user) {
+        throw new Error("You have to be logged in.");
+      }
       return prisma.myMovie.create({
         data: {
           title,
-
           image,
           date,
           tmdbID,
