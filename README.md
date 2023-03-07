@@ -6,6 +6,9 @@ At its core, myvu allows you to search for movies, give them a score and add the
 
 The endgame is slightly more comprehensive and lucrative (and a bit of a secret for now) but will involve a social aspect, connecting users with similar tastes. 
 
+## Get started?
+Coming soon
+
 ## What's the inspiration? 
 
 Largely a result of evolution. 20 years ago I started logging films in an Excel spreadsheet. 10 years later Google sheets made it all the more prettier and accessible. Now, it needs a new home that can provide it with a bit more love.
