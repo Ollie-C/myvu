@@ -1,32 +1,32 @@
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import type { MyMovie } from "@prisma/client";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { getSession } from "@auth0/nextjs-auth0";
 
-// const getUsersQuery = gql`
-//   query {
-//     getUser {
-//       id
-//       email
-//       role
-//       myMovies {
-//         title
-//       }
-//     }
-//   }
-// `;
-
-const AddMyMovieMutation = gql`
-  mutation addMyMovie(
+const userQuery = gql`
+  query user($email: String!) {
+    user(email: $email) {
+      id
+      name
+      email
+      myMovies {
+        title
+      }
+    }
+  }
+`;
+const AddMovieMutation = gql`
+  mutation addMovie(
     $title: String!
-    $image: String!
-    $date: String!
-    $tmdbID: Int!
+    $image: String
+    $date: String
+    $tmdbID: Int
   ) {
-    addMyMovie(title: $title, image: $image, date: $date, tmdbID: $tmdbID) {
+    addMovie(title: $title, image: $image, date: $date, tmdbID: $tmdbID) {
       title
       image
       date
@@ -35,18 +35,22 @@ const AddMyMovieMutation = gql`
   }
 `;
 
-const Home: NextPage = () => {
+const Home: NextPage = (props) => {
   //Auth0 hook to check if user authenticated
   const { user } = useUser();
 
   // //Apollo hook to get user data (temporary)
-  // const { data, loading, error } = useQuery(getUsersQuery);
+  const {
+    data: userData,
+    loading: userLoading,
+    error: userError,
+  } = useQuery(userQuery, { variables: { email: user?.email } });
 
   //Movies state and searched movie state
   const [movies, setMovies] = useState([]);
   const [searchedMovie, setSearchedMovie] = useState(null);
 
-  const [addMyMovie, { loading, error }] = useMutation(AddMyMovieMutation);
+  const [addMovie, { loading, error }] = useMutation(AddMovieMutation);
   const [selectedMovie, setSelectedMovie] = useState(null);
 
   //Async call to get movies data from TMDB (temporary - replace with gql)
@@ -64,7 +68,7 @@ const Home: NextPage = () => {
     if (String(movie)) setSearchedMovie(movie);
   };
 
-  const addMovie = async (selectedMovie: any) => {
+  const addUserMovie = async (selectedMovie: any) => {
     const {
       title,
       poster_path,
@@ -75,12 +79,13 @@ const Home: NextPage = () => {
     const image = `https://image.tmdb.org/t/p/w200${poster_path}`;
     const variables = { title, image, date, tmdbID };
 
+    console.log(variables);
+    console.log(user?.id);
     try {
-      addMyMovie({ variables });
+      await addMovie({ variables });
     } catch (e) {
       console.log(e);
     }
-    console.log(variables);
   };
 
   useEffect(() => {
@@ -90,15 +95,11 @@ const Home: NextPage = () => {
   }, [searchedMovie]);
 
   useEffect(() => {
-    console.log(selectedMovie);
-  }, [selectedMovie]);
+    console.log(props);
+  }, [props]);
 
-  // useEffect(() => {
-  //   console.log(data);
-  // }, [data]);
-
-  // // if (loading) return <p>Loading ...</p>;
-  // if (error) return <p>{error.message}</p>;
+  if (loading) return <p>Loading ...</p>;
+  if (error) return <p>{error.message}</p>;
   return (
     <>
       <Head>
@@ -110,8 +111,21 @@ const Home: NextPage = () => {
           <h2>welcome to myvu</h2>
           {user ? (
             <>
-              <p>Logged in!</p>
-              <a href="/api/auth/logout">Logout</a>
+              <>
+                <p>Logged in!</p>
+                <a href="/api/auth/logout">Logout</a>
+              </>
+              <>
+                <h3>Your movies:</h3>
+                {userLoading && <p>Loading...</p>}
+                {userData && userData.user.myMovies.length > 0 ? (
+                  userData.user.myMovies.map((movie: any) => (
+                    <p key={movie.title}>{movie.title}</p>
+                  ))
+                ) : (
+                  <p>No movies yet!</p>
+                )}
+              </>
             </>
           ) : (
             <a href="/api/auth/login">Login</a>
@@ -126,7 +140,7 @@ const Home: NextPage = () => {
           <div className="results">
             <p>Results:</p>
             {selectedMovie && (
-              <button onClick={() => addMovie(selectedMovie)}>
+              <button onClick={() => addUserMovie(selectedMovie)}>
                 Add Selected
               </button>
             )}
@@ -156,3 +170,26 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getSession(req, res);
+
+  if (!session) {
+    return {
+      props: {},
+    };
+  }
+
+  const user = await prisma.user.findUnique({
+    select: {
+      email: true,
+    },
+    where: {
+      email: session?.user.email,
+    },
+  });
+
+  return {
+    props: { user },
+  };
+};

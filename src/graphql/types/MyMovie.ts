@@ -8,19 +8,49 @@ builder.prismaObject("MyMovie", {
     image: t.exposeString("image", { nullable: true }),
     date: t.exposeString("date", { nullable: true }),
     tmdbID: t.exposeInt("tmdbID", { nullable: true }),
-    users: t.relation("users"),
+    user: t.relation("user"),
   }),
 });
 
-builder.mutationField("addMyMovie", (t) =>
+//Get all myMovies
+builder.queryField("movieList", (t) =>
+  t.prismaField({
+    type: ["MyMovie"],
+    resolve: async (query, _parent, _args, _info) =>
+      prisma.myMovie.findMany({
+        ...query,
+      }),
+  })
+);
+
+//Get individual myMovie
+builder.queryField("movie", (t) =>
+  t.prismaField({
+    type: "MyMovie",
+    args: {
+      id: t.arg.id({ required: true }),
+    },
+    nullable: true,
+    resolve: async (query, _parent, args, _info) =>
+      prisma.myMovie.findUnique({
+        ...query,
+        where: {
+          id: Number(args.id),
+        },
+      }),
+  })
+);
+
+//Add movie
+builder.mutationField("addMovie", (t) =>
   t.prismaField({
     type: "MyMovie",
     args: {
       title: t.arg.string({ required: true }),
-
-      image: t.arg.string({ required: true }),
-      date: t.arg.string({ required: true }),
-      tmdbID: t.arg.int({ required: true }),
+      image: t.arg.string(),
+      date: t.arg.string(),
+      tmdbID: t.arg.int(),
+      // userEmail: t.arg.string({ required: true }),
     },
     resolve: async (query, _parent, args, ctx) => {
       const { title, image, date, tmdbID } = args;
@@ -29,12 +59,18 @@ builder.mutationField("addMyMovie", (t) =>
       if (!(await ctx).user) {
         throw new Error("You have to be logged in.");
       }
+
+      const userEmail = (await ctx).user?.email;
+
       return prisma.myMovie.create({
         data: {
           title,
           image,
           date,
           tmdbID,
+          user: {
+            connect: { email: userEmail },
+          },
         },
       });
     },

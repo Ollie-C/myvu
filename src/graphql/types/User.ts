@@ -4,21 +4,34 @@ builder.prismaObject("User", {
   fields: (t) => ({
     id: t.exposeID("id"),
     name: t.exposeString("name", { nullable: true }),
-    email: t.exposeString("email", { nullable: true }),
-    role: t.expose("role", { type: Role }),
+    email: t.exposeString("email"),
     myMovies: t.relation("myMovies"),
   }),
 });
 
-const Role = builder.enumType("Role", {
-  values: ["USER", "ADMIN"] as const,
-});
-
-//Temporary - get individual user
-builder.queryField("getUser", (t) =>
+//Get all users
+builder.queryField("users", (t) =>
   t.prismaField({
     type: ["User"],
     resolve: (query, _parent, _args, _ctx, _info) =>
       prisma.user.findMany({ ...query }),
+  })
+);
+
+//Get individual user
+builder.queryField("user", (t) =>
+  t.prismaField({
+    type: "User",
+    args: {
+      email: t.arg.string({ required: true }),
+    },
+    nullable: true,
+    resolve: async (query, _parent, args, _info) =>
+      prisma.user.findUnique({
+        ...query,
+        where: {
+          email: String(args.email),
+        },
+      }),
   })
 );

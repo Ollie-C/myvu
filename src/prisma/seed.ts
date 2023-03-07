@@ -8,7 +8,6 @@ async function main() {
     update: {},
     create: {
       name: "Ollie",
-      role: "ADMIN",
       email: "bobbobbbbbb@bob.com",
     },
   });
