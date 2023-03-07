@@ -1,0 +1,20 @@
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
+
+.yourmovies {
+  margin: 3rem 0;
+
+  &__list {
+    @include flex(row, flex-start, center);
+    flex-wrap: wrap;
+    width: 100%;
+    min-height: 10rem;
+  }
+
+  &__movie {
+    border-radius: 3px;
+    margin: 2px;
+    background-color: $secondary-colour;
+    color: $primary-colour;
+  }
+}

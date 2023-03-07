@@ -1,0 +1,21 @@
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
+
+.result {
+  @include flex(column, flex-start, flex-start);
+  background-color: $secondary-colour;
+  color: $primary-colour;
+  margin: 4px;
+  border-radius: 3px;
+  width: 30%;
+  height: 4rem;
+  background-size: cover;
+  background-position: center;
+  opacity: 60%;
+  position: relative;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 100%;
+  }
+}

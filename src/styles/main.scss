@@ -1,0 +1,68 @@
+@use "./partials/resets";
+@use "./partials/mixins" as *;
+@use "./partials/variables" as *;
+
+.main {
+  padding: 4rem;
+  @include flex(row, center, center);
+  width: 100%;
+}
+
+.profile {
+  width: 100%;
+  h2 {
+    margin-bottom: 4rem;
+  }
+}
+
+.search {
+  width: 80%;
+  @include flex(column, center, center);
+
+  input {
+    padding: 5px;
+    border-radius: 3px;
+    border: none;
+    outline: none;
+    background-color: $tertiary-colour;
+    color: $primary-colour;
+  }
+
+  &__find {
+    margin: 10px;
+    border: none;
+    background: none;
+  }
+
+  &__add {
+    width: 100%;
+    text-align: center;
+    padding: 8px;
+
+    color: $secondary-colour;
+    font-size: 5rem;
+    border: none;
+    background-color: $primary-colour;
+  }
+}
+
+.account-cta {
+  background-color: $secondary-colour;
+  color: $primary-colour;
+  width: 6rem;
+  margin: 1rem 0;
+  padding: 8px;
+  @include flex(row, center, center);
+  text-align: center;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.results {
+  @include flex(row, flex-start, flex-start);
+  flex-wrap: wrap;
+  padding: 2rem;
+  margin-top: 2rem;
+  width: 100%;
+}
