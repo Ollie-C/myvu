@@ -2,23 +2,29 @@
 @use "./partials/mixins" as *;
 @use "./partials/variables" as *;
 
-.main {
-  padding: 4rem;
-  @include flex(row, center, center);
-  width: 100%;
+.section-title {
+  font-weight: 100;
+  letter-spacing: 2px;
+  font-size: 12px;
+  position: absolute;
+  top: -16px;
+  left: -6px;
+}
+
+.profile,
+.search {
+  margin: 0 10px;
+  padding: 4px;
+  position: relative;
 }
 
 .profile {
   width: 100%;
-  h2 {
-    margin-bottom: 4rem;
-  }
+  padding: 0 2rem;
 }
 
 .search {
-  width: 80%;
-  @include flex(column, center, center);
-
+  width: 60rem;
   input {
     padding: 5px;
     border-radius: 3px;
@@ -26,6 +32,10 @@
     outline: none;
     background-color: $tertiary-colour;
     color: $primary-colour;
+  }
+
+  &__form {
+    margin-top: 2rem;
   }
 
   &__find {
@@ -49,20 +59,24 @@
 .account-cta {
   background-color: $secondary-colour;
   color: $primary-colour;
-  width: 6rem;
   margin: 1rem 0;
-  padding: 8px;
+  padding: 4px;
+  border-radius: 3px;
+  font-size: 10px;
+  letter-spacing: 2px;
   @include flex(row, center, center);
   text-align: center;
+  position: fixed;
+  bottom: 1rem;
   &:hover {
     cursor: pointer;
   }
 }
 
 .results {
-  @include flex(row, flex-start, flex-start);
+  @include flex(row, flex-start, center);
   flex-wrap: wrap;
-  padding: 2rem;
+
   margin-top: 2rem;
   width: 100%;
 }

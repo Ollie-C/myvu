@@ -1,0 +1,18 @@
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
+
+.header,
+.main {
+  padding: 1rem 3rem;
+  width: 100%;
+}
+
+.main {
+  @include flex(row, center, flex-start);
+  padding: 3rem;
+}
+
+.header {
+  background-color: $tertiary-colour;
+  color: $primary-colour;
+}

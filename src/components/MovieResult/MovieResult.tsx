@@ -3,7 +3,6 @@ import React from "react";
 import styles from "./MovieResult.module.scss";
 
 const MovieResult = ({ movie, selectedMovie, setSelectedMovie }) => {
-  console.log(movie);
   return (
     <div
       className={styles.result}

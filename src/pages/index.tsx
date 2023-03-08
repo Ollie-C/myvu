@@ -7,6 +7,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import YourMovies from "@/components/YourMovies/YourMovies";
 import MovieResult from "@/components/MovieResult/MovieResult";
 import { MyMovie } from "@prisma/client";
+import Layout from "@/components/Layout/Layout";
 
 const userQuery = gql`
   query user($email: String!) {
@@ -59,7 +60,7 @@ const Home: NextPage = () => {
   } = useQuery(userQuery, { variables: { email: user?.email } });
 
   //Add movie mutation hook
-  const [addMovie, { loading, error }] = useMutation(AddMovieMutation);
+  const [addMovie, { loading: adding, error }] = useMutation(AddMovieMutation);
 
   //Delete movie mutation hook
   const [deleteMovie] = useMutation(DeleteMovieMutation);
@@ -125,14 +126,12 @@ const Home: NextPage = () => {
         <title>myvu</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="main">
+
+      <Layout>
         <section className="profile">
-          <h2>
-            welcome to <b> myvu</b>
-          </h2>
+          <h4 className="section-title">YOUR COLLECTION</h4>
           {user ? (
             <>
-              <p>Your collection</p>
               <>
                 {userLoading && <p>Loading...</p>}
                 {userError && <p>{userError.message}</p>}
@@ -140,6 +139,7 @@ const Home: NextPage = () => {
                   <YourMovies
                     movies={userData.user.myMovies}
                     deleteMyMovie={deleteMyMovie}
+                    adding={adding}
                   />
                 )}
               </>
@@ -154,7 +154,8 @@ const Home: NextPage = () => {
           )}
         </section>
         <section className="search">
-          <form onSubmit={(e) => handleSubmit(e)}>
+          <h4 className="section-title">ADD A MOVIE</h4>
+          <form className="search__form" onSubmit={(e) => handleSubmit(e)}>
             <input type="text" name="title" id="title" />
             <button className="search__find" type="submit">
               FIND IT
@@ -180,7 +181,7 @@ const Home: NextPage = () => {
             </button>
           )}
         </section>
-      </main>
+      </Layout>
     </>
   );
 };
