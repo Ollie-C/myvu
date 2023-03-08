@@ -76,3 +76,20 @@ builder.mutationField("addMovie", (t) =>
     },
   })
 );
+
+//Delete movie
+builder.mutationField("deleteMovie", (t) =>
+  t.prismaField({
+    type: "MyMovie",
+    args: {
+      id: t.arg.id({ required: true }),
+    },
+    resolve: async (query, _parents, args, _info) =>
+      prisma.myMovie.delete({
+        ...query,
+        where: {
+          id: Number(args.id),
+        },
+      }),
+  })
+);

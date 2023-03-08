@@ -6,6 +6,7 @@ import axios from "axios";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import YourMovies from "@/components/YourMovies/YourMovies";
 import MovieResult from "@/components/MovieResult/MovieResult";
+import { MyMovie } from "@prisma/client";
 
 const userQuery = gql`
   query user($email: String!) {
@@ -37,6 +38,14 @@ const AddMovieMutation = gql`
   }
 `;
 
+const DeleteMovieMutation = gql`
+  mutation deleteMovie($id: ID!) {
+    deleteMovie(id: $id) {
+      id
+    }
+  }
+`;
+
 const Home: NextPage = () => {
   //Auth0 hook to check if user authenticated
   const { user } = useUser();
@@ -51,6 +60,9 @@ const Home: NextPage = () => {
 
   //Add movie mutation hook
   const [addMovie, { loading, error }] = useMutation(AddMovieMutation);
+
+  //Delete movie mutation hook
+  const [deleteMovie] = useMutation(DeleteMovieMutation);
 
   //Movies state and searched movie state
   const [movies, setMovies] = useState([]);
@@ -92,11 +104,19 @@ const Home: NextPage = () => {
     setSelectedMovie(null);
   };
 
+  const deleteMyMovie = async (movie: MyMovie) => {
+    try {
+      await deleteMovie({ variables: { id: movie.id } });
+      refetch();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
     if (searchedMovie) {
       getMovies(searchedMovie);
     }
-    console.log(searchedMovie);
   }, [searchedMovie]);
 
   return (
@@ -112,10 +132,16 @@ const Home: NextPage = () => {
           </h2>
           {user ? (
             <>
+              <p>Your collection</p>
               <>
                 {userLoading && <p>Loading...</p>}
                 {userError && <p>{userError.message}</p>}
-                {userData && <YourMovies movies={userData.user.myMovies} />}
+                {userData && (
+                  <YourMovies
+                    movies={userData.user.myMovies}
+                    deleteMyMovie={deleteMyMovie}
+                  />
+                )}
               </>
               <div className="account-cta">
                 <a href="/api/auth/logout">LOGOUT</a>
