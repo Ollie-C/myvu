@@ -28,26 +28,35 @@ const YourMovies: React.FC<Props> = ({ movies, deleteMyMovie, adding }) => {
     <div className={styles.yourmovies}>
       <div className={styles.yourmovies__list}>
         {movies.map((movie: MyMovie, index: number) => (
-          <div>
+          <div key={movie.id}>
             <p className={styles.yourmovies__index}>{index + 1}</p>
-            <Image
-              src={movie.image}
-              key={movie.id}
-              className={styles.yourmovies__movie}
-              alt={movie.title}
-              width={100}
-              height={120}
-              onClick={() =>
-                selectedMyMovie && selectedMyMovie.title === movie.title
-                  ? setSelectedMyMovie(null)
-                  : setSelectedMyMovie(movie)
-              }
-            />
+            <div className={styles.yourmovies__movieContainer}>
+              {movie.image && (
+                <Image
+                  src={movie.image}
+                  className={styles.yourmovies__movie}
+                  alt={movie.title}
+                  width={200}
+                  height={230}
+                  quality={100}
+                  onClick={() =>
+                    selectedMyMovie && selectedMyMovie.title === movie.title
+                      ? setSelectedMyMovie(null)
+                      : setSelectedMyMovie(movie)
+                  }
+                />
+              )}
+            </div>
           </div>
         ))}
       </div>
       {selectedMyMovie && (
-        <button onClick={() => deleteMyMovie(selectedMyMovie)}>X</button>
+        <button
+          className={styles.yourmovies__delete}
+          onClick={() => deleteMyMovie(selectedMyMovie)}
+        >
+          X
+        </button>
       )}
     </div>
   );

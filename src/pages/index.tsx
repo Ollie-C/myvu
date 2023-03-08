@@ -67,7 +67,7 @@ const Home: NextPage = () => {
 
   //Movies state and searched movie state
   const [movies, setMovies] = useState([]);
-  const [searchedMovie, setSearchedMovie] = useState(null);
+  const [searchedMovie, setSearchedMovie] = useState("");
   const [selectedMovie, setSelectedMovie] = useState(null);
 
   //Async call to get movies data from TMDB (temporary - replace with gql)
@@ -93,7 +93,11 @@ const Home: NextPage = () => {
       id: tmdbID,
     } = selectedMovie;
 
-    const image = `https://image.tmdb.org/t/p/w200${poster_path}`;
+    let image;
+    if (poster_path) {
+      image = `https://image.tmdb.org/t/p/w200${poster_path}`;
+    }
+
     const variables = { title, image, date, tmdbID };
 
     try {
@@ -156,7 +160,13 @@ const Home: NextPage = () => {
         <section className="search">
           <h4 className="section-title">ADD A MOVIE</h4>
           <form className="search__form" onSubmit={(e) => handleSubmit(e)}>
-            <input type="text" name="title" id="title" />
+            <input
+              type="text"
+              name="title"
+              id="title"
+              value={searchedMovie}
+              onChange={(e) => setSearchedMovie(e.target.value)}
+            />
             <button className="search__find" type="submit">
               FIND IT
             </button>
@@ -164,6 +174,7 @@ const Home: NextPage = () => {
 
           <div className="results">
             {movies &&
+              searchedMovie &&
               movies.map((movie: any) => (
                 <MovieResult
                   movie={movie}

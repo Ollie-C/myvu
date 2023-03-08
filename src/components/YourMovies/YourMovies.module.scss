@@ -18,6 +18,8 @@
   }
 
   &__movie {
+    width: 6rem;
+    height: 7.6rem;
     border-radius: 3px;
     margin: 2px;
     background-color: $secondary-colour;
@@ -27,5 +29,17 @@
   &__index {
     padding: 2px;
     font-size: 10px;
+  }
+
+  &__delete {
+    padding: 4px 8px;
+    background-color: $tertiary-colour;
+    color: $primary-colour;
+    border: none;
+    outline: none;
+    border-radius: 3px;
+    &:hover {
+      background-color: $secondary-colour;
+    }
   }
 }
