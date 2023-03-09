@@ -19,6 +19,7 @@ const userQuery = gql`
         id
         title
         image
+        score
       }
     }
   }
@@ -144,6 +145,7 @@ const Home: NextPage = () => {
                     movies={userData.user.myMovies}
                     deleteMyMovie={deleteMyMovie}
                     adding={adding}
+                    refetch={refetch}
                   />
                 )}
               </>

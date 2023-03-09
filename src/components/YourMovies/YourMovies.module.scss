@@ -2,12 +2,19 @@
 @use "../../styles/partials/variables" as *;
 
 .yourmovies {
-  margin: 1rem 0;
   height: 60vh;
 
   &__loading {
     @include flex(row, center, center);
     width: 100%;
+  }
+
+  &__section {
+    margin: 2rem 0;
+  }
+
+  &__header {
+    font-size: 12px;
   }
 
   &__list {

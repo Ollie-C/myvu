@@ -5,7 +5,14 @@ builder.prismaObject("User", {
     id: t.exposeID("id"),
     name: t.exposeString("name", { nullable: true }),
     email: t.exposeString("email"),
-    myMovies: t.relation("myMovies"),
+    myMovies: t.relation("myMovies", {
+      //Update this later when allowing user to filter and sort
+      query: () => ({
+        orderBy: {
+          score: "desc",
+        },
+      }),
+    }),
   }),
 });
 
@@ -14,7 +21,9 @@ builder.queryField("users", (t) =>
   t.prismaField({
     type: ["User"],
     resolve: (query, _parent, _args, _ctx, _info) =>
-      prisma.user.findMany({ ...query }),
+      prisma.user.findMany({
+        ...query,
+      }),
   })
 );
 
@@ -28,7 +37,6 @@ builder.queryField("user", (t) =>
     nullable: true,
     resolve: async (query, _parent, args, _info) =>
       prisma.user.findUnique({
-        ...query,
         where: {
           email: String(args.email),
         },

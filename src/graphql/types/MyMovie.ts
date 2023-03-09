@@ -19,6 +19,7 @@ builder.queryField("movieList", (t) =>
     resolve: async (query, _parent, _args, _info) =>
       prisma.myMovie.findMany({
         ...query,
+        orderBy: { score: "desc" },
       }),
   })
 );
@@ -89,6 +90,27 @@ builder.mutationField("deleteMovie", (t) =>
         ...query,
         where: {
           id: Number(args.id),
+        },
+      }),
+  })
+);
+
+//Add score
+builder.mutationField("addScore", (t) =>
+  t.prismaField({
+    type: "MyMovie",
+    args: {
+      id: t.arg.id({ required: true }),
+      score: t.arg.float({ required: true }),
+    },
+    resolve: async (query, _parent, args, _info) =>
+      prisma.myMovie.update({
+        ...query,
+        where: {
+          id: Number(args.id),
+        },
+        data: {
+          score: args.score,
         },
       }),
   })
