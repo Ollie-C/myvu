@@ -3,7 +3,6 @@
 
 .header,
 .main {
-  padding: 1rem 3rem;
   width: 100%;
 }
 
@@ -13,6 +12,29 @@
 }
 
 .header {
+  padding: 1rem 3rem;
   background-color: $tertiary-colour;
   color: $primary-colour;
+
+  @include flex(row, space-between, center);
+  h1 {
+    font-size: 2rem;
+    font-weight: 900;
+  }
+}
+
+.accountCTA {
+  background-color: $secondary-colour;
+  color: $primary-colour;
+  padding: 12px;
+  border-radius: 3px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  @include flex(row, center, center);
+  text-align: center;
+  &:hover {
+    cursor: pointer;
+    background-color: $primary-colour;
+    color: $tertiary-colour;
+  }
 }

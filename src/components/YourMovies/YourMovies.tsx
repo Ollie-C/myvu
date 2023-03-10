@@ -8,7 +8,7 @@ import { gql, useMutation } from "@apollo/client";
 type Props = {
   movies: MyMovie[];
   deleteMyMovie: (movie: MyMovie) => void;
-  adding: any;
+  // adding: any;
   refetch: () => void;
 };
 
@@ -21,12 +21,7 @@ const AddScoreMutation = gql`
   }
 `;
 
-const YourMovies: React.FC<Props> = ({
-  movies,
-  deleteMyMovie,
-  adding,
-  refetch,
-}) => {
+const YourMovies: React.FC<Props> = ({ movies, deleteMyMovie, refetch }) => {
   const [selectedMyMovie, setSelectedMyMovie] = useState<MyMovie | null>(null);
 
   const [addScore] = useMutation(AddScoreMutation);
@@ -52,19 +47,30 @@ const YourMovies: React.FC<Props> = ({
       console.log(e);
     }
   };
-  console.log(movies);
 
   return (
     <div className={styles.yourmovies}>
+      <h4 className="section-title">YOUR COLLECTION</h4>
       <div className={styles.yourmovies__section}>
-        <h4 className={styles.yourmovies__header}>TOP 16</h4>
+        <ul className={styles.yourmovies__filter}>
+          <li>
+            <b>TOP 20</b>
+          </li>
+          <li>21 - 40</li>
+          <li>41 - 60</li>
+          <li>61 - 80</li>
+          <li>ALL</li>
+        </ul>
         <div className={styles.yourmovies__list}>
           {movies.map(
             (movie: MyMovie) =>
               movie.score && (
                 <div key={movie.id}>
-                  <p className={styles.yourmovies__index}>{movie.score}</p>
                   <div className={styles.yourmovies__movieContainer}>
+                    <div className={styles.yourmovies__score}>
+                      <p>{movie.score}</p>
+                    </div>
+
                     {movie.image && (
                       <Image
                         src={movie.image}
@@ -88,11 +94,9 @@ const YourMovies: React.FC<Props> = ({
         </div>
       </div>
       <div className={styles.yourmovies__section}>
-        <h4 className={styles.yourmovies__header}>
-          THESE ARE AWAITING A SCORE!
-        </h4>
+        <h4 className={styles.yourmovies__header}>GIVE THESE A SCORE . . .</h4>
         <div className={styles.yourmovies__list}>
-          {adding && <RotateLoader />}
+          {/* {adding && <RotateLoader />} */}
           {movies
             .map(
               (movie: MyMovie) =>
@@ -119,7 +123,7 @@ const YourMovies: React.FC<Props> = ({
                   </div>
                 )
             )
-            .slice(0, 7)}
+            .slice(0, 10)}
         </div>
       </div>
       {selectedMyMovie && (

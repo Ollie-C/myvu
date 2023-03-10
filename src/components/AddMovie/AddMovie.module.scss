@@ -1,0 +1,38 @@
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
+
+.addForm {
+  margin: 1rem 0;
+  width: 100%;
+  input {
+    padding: 0.5rem;
+    width: 100%;
+    border-radius: 3px;
+    border: none;
+    outline: none;
+    background-color: $tertiary-colour;
+    color: $primary-colour;
+    text-align: center;
+  }
+}
+
+.searchResults {
+  @include flex(row, flex-start, center);
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.addButton {
+  width: 100%;
+  text-align: center;
+  margin: 1rem 0;
+  color: $primary-colour;
+  border-radius: 3px;
+  font-size: 2rem;
+  border: none;
+  background-color: $tertiary-colour;
+  &:hover {
+    background-color: $secondary-colour;
+  }
+}

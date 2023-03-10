@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React from "react";
 import styles from "./MovieResult.module.scss";
 
@@ -14,9 +13,14 @@ const MovieResult = ({ movie, selectedMovie, setSelectedMovie }) => {
         !selectedMovie ? setSelectedMovie(movie) : setSelectedMovie(null)
       }
     >
-      {/* <h3>{movie.title}</h3> */}
-      {/* <p>Date: {movie.release_date}</p>
-      <p>Score: {movie.vote_average}</p> */}
+      <div className={styles.result__content}>
+        <div className={styles.result__details}>
+          <p>
+            <b>{movie.title.toUpperCase()}</b>
+          </p>
+          <p>({movie.release_date.slice(0, 4)})</p>
+        </div>
+      </div>
     </div>
   );
 };
