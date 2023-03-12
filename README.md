@@ -22,9 +22,10 @@ Letterboxd is awesome, and very close to what I have in mind. Its older and less
 * **Time that I don't have**
 * **NextJS**
 * **TypeScript**
-* *SASS*
+* **SASS**
 * **GraphQL Yoga**
 * *Apollo Client*
+* *Codegen*
 * **Pothos**
 * **Prisma**
 * *Supabase*
@@ -38,3 +39,7 @@ amongst others...
 ## Why? Who cares? 
 
 Great question! I have no idea. But if I can find one other person that finds it useful, that's a win for me.
+
+## Credits
+
+Movie data is retrieved from TMDB API
